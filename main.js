@@ -1,6 +1,6 @@
 let grid;
 let pCenterMousedown = false;
-let redrawGrid;
+let pLeftMouseDown = false;
 
 /* Remove default rightclick functionality to allow our own function */
 document.addEventListener('contextmenu', event => event.preventDefault());
@@ -13,15 +13,39 @@ function setup() {
 
 function draw() {
     moveGrid();
+    drawOnGrid();
 
-    if (redrawGrid) {
+
+    if (grid.drawPoint) {
+        grid.redrawGrid = true;
+    }
+    if (grid.redrawGrid) {
         grid.draw();
     }
-    redrawGrid = false;
+    grid.redrawGrid = false;
 }
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+}
+
+function drawOnGrid() {
+    if (mouseIsPressed) {
+        if (mouseButton === LEFT) {
+            if (!pLeftMouseDown) {
+                grid.drawOnGrid();
+            }
+
+            pLeftMouseDown = true;
+        } else {
+            pLeftMouseDown = false;
+        }
+        if (mouseButton === RIGHT) {
+            grid.stopDrawOnGrid();
+        }
+    } else {
+        pLeftMouseDown = false;
+    }
 }
 
 function moveGrid() {
@@ -29,8 +53,8 @@ function moveGrid() {
         if (mouseButton === CENTER) {
             if (pCenterMousedown) {
                 let difference = createVector(mouseX - pmouseX, mouseY - pmouseY);
-                grid.currentPoint = grid.startPoint.add(difference);
-                redrawGrid = true;
+                grid.transform(difference);
+                grid.redrawGrid = true;
             }
 
             pCenterMousedown = true;
@@ -48,5 +72,5 @@ function mouseWheel(e) {
     } else {
         grid.zoomIn();
     }
-    redrawGrid = true;
+    grid.redrawGrid = true;
 }
