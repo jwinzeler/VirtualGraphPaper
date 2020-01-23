@@ -1,6 +1,5 @@
 let grid;
-let pCenterMousedown = false;
-let pLeftMouseDown = false;
+let pMouseCenterDown = false;
 
 /* Remove default rightclick functionality to allow our own function */
 document.addEventListener('contextmenu', event => event.preventDefault());
@@ -8,61 +7,23 @@ document.addEventListener('contextmenu', event => event.preventDefault());
 function setup() {
     createCanvas(windowWidth, windowHeight);
     grid = new Grid(16);
-    grid.draw();
 }
 
 function draw() {
-    moveGrid();
-    drawOnGrid();
-
-
-    if (grid.drawPoint) {
-        grid.redrawGrid = true;
-    }
-    if (grid.redrawGrid) {
-        grid.draw();
-    }
-    grid.redrawGrid = false;
+    pan()
+    grid.draw();
 }
 
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-}
-
-function drawOnGrid() {
-    if (mouseIsPressed) {
-        if (mouseButton === LEFT) {
-            if (!pLeftMouseDown) {
-                grid.drawOnGrid();
-            }
-
-            pLeftMouseDown = true;
-        } else {
-            pLeftMouseDown = false;
-        }
-        if (mouseButton === RIGHT) {
-            grid.stopDrawOnGrid();
-        }
-    } else {
-        pLeftMouseDown = false;
-    }
-}
-
-function moveGrid() {
+function pan() {
     if (mouseIsPressed) {
         if (mouseButton === CENTER) {
-            if (pCenterMousedown) {
-                let difference = createVector(mouseX - pmouseX, mouseY - pmouseY);
-                grid.transform(difference);
-                grid.redrawGrid = true;
+            if (pMouseCenterDown) {
+                grid.pan()
             }
-
-            pCenterMousedown = true;
-        } else if (!pCenterMousedown) {
-            pCenterMousedown = false;
+            pMouseCenterDown = true;
+        } else {
+            pMouseCenterDown = false;
         }
-    } else if (!pCenterMousedown) {
-        pCenterMousedown = false;
     }
 }
 
@@ -72,5 +33,8 @@ function mouseWheel(e) {
     } else {
         grid.zoomIn();
     }
-    grid.redrawGrid = true;
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
 }

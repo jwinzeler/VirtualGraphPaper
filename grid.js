@@ -1,114 +1,75 @@
 class Grid {
-    constructor(stepSize) {
-        this.stepSize = stepSize;
-        this.startPoint = createVector();
-        this.redrawGrid = false;
-        
-        this.drawPoint = null;
-    }
+    constructor(cellSize) {
+        this.cellSize = cellSize;
+        this.zoom = 1;
+        this.offset = createVector();
 
-    xOffset() {
-        return this.startPoint.x % this.stepSize;
-    }
+        this.lines = [];
 
-    yOffset() {
-        return this.startPoint.y % this.stepSize;
+        this.zoomFactor = 1.05;
     }
 
     draw() {
+        let relativeCellSize = this.cellSize * this.zoom;
+        let weight = (0.5 * this.zoom < 0.2 ? 0 : 0.5 * this.zoom);
         background(255);
-        strokeWeight(0.5);
-
+        strokeWeight(weight);
         stroke(200);
 
+        const edgeOffsetX = this.offset.x % relativeCellSize;
+        const edgeOffsetY = this.offset.y % relativeCellSize;
+
         // Vertical Lines
-        for (let i = 0; i - 1 <= Math.floor(width / this.stepSize); i++) {
+        for (let i = -1; i <= width / relativeCellSize; i++) {
             line(
-                this.xOffset() + i * this.stepSize,
-                this.yOffset() - this.stepSize,
-                this.xOffset() + i * this.stepSize,
-                this.yOffset() + height + this.stepSize
+                edgeOffsetX + (i * relativeCellSize),
+                -relativeCellSize,
+                edgeOffsetX + (i * relativeCellSize),
+                relativeCellSize + height
             );
         }
 
         // Horizontal Lines
-        for (let i = 0; i - 1 <= Math.floor(height / this.stepSize); i++) {
+        for (let i = -1; i <= height / relativeCellSize; i++) {
             line(
-                this.xOffset() - this.stepSize,
-                this.yOffset() + i * this.stepSize,
-                this.xOffset() + width + this.stepSize,
-                this.yOffset() + i * this.stepSize
+                -relativeCellSize,
+                edgeOffsetY + (i * relativeCellSize),
+                relativeCellSize + height,
+                edgeOffsetY + (i * relativeCellSize)
             );
         }
 
-        // Point
-        stroke(255, 0, 0);
-        if (this.drawPoint) {
-            line(this.drawPoint.x, this.drawPoint.y, this.selectMouseXOnGrid(), this.selectMouseYOnGrid());
-        }
+        this.lines.forEach(line => {
+            line.draw(this.offset, relativeCellSize, this.zoom);
+        });
     }
 
-    transform(amount) {
-        this.startPoint.add(amount);
-
-        if(this.drawPoint) {
-            this.drawPoint.add(amount);
-        }
-    }
-
-    drawOnGrid() {
-        if (this.drawPoint) {
-            console.log(`Drawing from ${this.drawPoint} to ${createVector(this.selectMouseXOnGrid(), this.selectMouseYOnGrid())}`);
-            this.drawPoint = null;
-        } else {
-            this.drawPoint = this.selectPointOnGrid(mouseX, mouseY);
-        }
-    }
-    
-    stopDrawOnGrid() {
-        if (this.drawPoint !== null) {
-            this.drawPoint = null;
-            grid.redrawGrid = true;
-        }
-    }
-
-    selectPointOnGrid(x ,y) {
-        let xOffset = x % this.stepSize;
-        let yOffset = y % this.stepSize;
-        let right = xOffset >= this.stepSize / 2;
-        let bottom = yOffset >= this.stepSize / 2;
-        return createVector(
-            this.xOffset() - xOffset + x + (right ? this.stepSize : 0),
-            this.yOffset() - yOffset + y + (bottom ? this.stepSize : 0)
-        );
-    }
-
-    selectMouseXOnGrid() {
-        let xOffset = mouseX % this.stepSize;
-        let right = xOffset >= this.stepSize / 2;
-        return this.xOffset() - xOffset + mouseX + (right ? this.stepSize : 0);
-    }
-
-    selectMouseYOnGrid() {
-        let yOffset = mouseY % this.stepSize;
-        let bottom = yOffset >= this.stepSize / 2;
-        return this.yOffset() - yOffset + mouseY + (bottom ? this.stepSize : 0);
+    pan() {
+        let pMousePos = createVector(pmouseX, pmouseY);
+        let mousePos = createVector(mouseX, mouseY);
+        let difference = pMousePos.sub(mousePos);
+        this.offset.sub(difference);
     }
 
     zoomIn() {
-        this.stepSize++;
-
-        if (this.drawPoint) {
-            this.drawPoint = this.selectPointOnGrid(this.drawPoint.x, this.drawPoint.y);
-        }
+        this.zoom *= this.zoomFactor;
+        let offset = createVector(
+            (mouseX - this.offset.x) * (this.zoomFactor - 1),
+            (mouseY - this.offset.y) * (this.zoomFactor - 1)
+        );
+        this.offset.sub(offset);
+        console.log(this.offset);
     }
 
     zoomOut() {
-        if (this.stepSize > 1) {
-            this.stepSize--;
-            if (this.drawPoint) {
-                this.drawPoint = this.selectPointOnGrid(this.drawPoint.x, this.drawPoint.y);
-            }
+        if (this.cellSize * this.zoom >= 1) {
+            this.zoom *= 2 - this.zoomFactor;
+            let offset = createVector(
+                (mouseX - this.offset.x) * (this.zoomFactor - 1),
+                (mouseY - this.offset.y) * (this.zoomFactor - 1)
+            );
+            this.offset.add(offset);
+            console.log(this.offset);
         }
     }
 }
