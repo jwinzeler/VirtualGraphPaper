@@ -4,7 +4,13 @@ class Grid {
         this.zoom = 1;
         this.offset = createVector();
 
-        this.lines = [];
+        this.lines = [
+            new Line(5, 5, 10, 10, color(0, 255, 0), 5)
+        ];
+
+        this.point = null;
+        this.color = color(0);
+        this.weight = 5;
 
         this.zoomFactor = 1.05;
     }
@@ -39,9 +45,22 @@ class Grid {
             );
         }
 
+        // Drawn Lines
         this.lines.forEach(line => {
             line.draw(this.offset, relativeCellSize, this.zoom);
         });
+
+        // Current Line
+        if (this.point) {
+            stroke(this.color);
+            strokeWeight(this.weight * this.zoom);
+            line(
+                this.point.x * this.cellSize + this.offset.x,
+                this.point.y * this.cellSize + this.offset.y,
+                mouseX,
+                mouseY
+            );
+        }
     }
 
     pan() {
@@ -58,7 +77,6 @@ class Grid {
             (mouseY - this.offset.y) * (this.zoomFactor - 1)
         );
         this.offset.sub(offset);
-        console.log(this.offset);
     }
 
     zoomOut() {
@@ -69,7 +87,23 @@ class Grid {
                 (mouseY - this.offset.y) * (this.zoomFactor - 1)
             );
             this.offset.add(offset);
-            console.log(this.offset);
         }
+    }
+
+    // TODO: BROKEN AF FIX BRAH
+    addPoint() {
+        if (this.point) {
+            this.point = null;
+        } else {
+            this.point = this.getGridLocation(mouseX, mouseY);
+            console.log(this.point);
+        }
+    }
+
+    getGridLocation(x, y) {
+        return createVector(
+            Math.round(x / this.cellSize),
+            Math.round(y / this.cellSize)
+        );
     }
 }

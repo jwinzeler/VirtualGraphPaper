@@ -14,6 +14,12 @@ function draw() {
     grid.draw();
 }
 
+function mousePressed() {
+    if (mouseButton === LEFT) {
+        grid.addPoint();
+    }
+}
+
 function pan() {
     if (mouseIsPressed) {
         if (mouseButton === CENTER) {
