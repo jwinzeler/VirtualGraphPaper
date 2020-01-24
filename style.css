@@ -51,10 +51,11 @@ html, body {
 }
 
 .control input[type="color"] {
-    height: auto;
+    /*height: auto;
     cursor: pointer;
     padding: 0;
-    height: 30px;
+    height: 30px;*/
+    display: none;
 }
 
 .control label {
@@ -81,6 +82,7 @@ html, body {
 
 .control button:hover {
     background: #EEE;
+    cursor: pointer;
 }
 
 .control button:active {

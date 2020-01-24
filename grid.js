@@ -155,6 +155,7 @@ class Grid {
 
     setColor(c) {
         this.color = color(c);
+        document.querySelector('.control-color #colorOverlay').style.backgroundColor = c;
     }
 
     clear() {

@@ -76,6 +76,7 @@ function download() {
 // Controls
 function setControlValues() {
     document.querySelector('.control-color input').value = colorToHex(grid.color);
+    document.querySelector('.control-color #colorOverlay').style.backgroundColor = colorToHex(grid.color);
     document.querySelector('.control-weight input').value = grid.weight;
     document.querySelector('.control-snap input').checked = grid.snap;
 }
@@ -110,6 +111,9 @@ document.querySelector('.control-cluster #clearAll').addEventListener('click', e
 })
 
 // Color
+document.querySelector('.control-color #colorOverlay').addEventListener('click', e => {
+    document.querySelector('.control-color input').click();
+})
 document.querySelector('.control-color input').addEventListener('input', e => {
     grid.setColor(e.target.value);
 });
