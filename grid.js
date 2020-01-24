@@ -8,7 +8,7 @@ class Grid {
 
         this.point = null;
         this.color = color(0);
-        this.weight = 5;
+        this.weight = 2;
         this.snap = true;
 
         this.zoomFactor = 1.05;
@@ -155,5 +155,38 @@ class Grid {
 
     setColor(c) {
         this.color = color(c);
+    }
+
+    clear() {
+        this.lines = [];
+        this.point = null;
+    }
+
+    save() {
+        return JSON.stringify({color: this.color, weight: this.weight, snap: this.snap, lines: this.lines});
+    }
+
+    load(json) {
+        let state = JSON.parse(json);
+        if (state.color) {
+            this.setColor(colorToHex(state.color));
+        }
+
+        if (state.weight) {
+            this.setWeight(state.weight);
+        }
+
+        if (state.snap != undefined) {
+            this.setSnap(state.snap);
+        }
+
+        if (state.lines) {
+            this.lines = [];
+            state.lines.forEach(e => {
+                this.lines.push(new Line(e.x1, e.y1, e.x2, e.y2, color(colorToHex(e.color)), e.weight));
+            });
+        }
+
+        setControlValues();
     }
 }

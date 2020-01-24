@@ -7,17 +7,28 @@
     </head>
     <body>
         <div class="controls">
-            <div class="control control-color">
-                <label for="color">Color</label>
-                <input type="color" name="color" />
+            <div class="controls-top">
+                <div class="control control-cluster">
+                    <label>VirtualGraphPaper</label>
+                    <button id="saveAll">Save</button>
+                    <button id="loadOverlay">Load</button>
+                    <input type="file" id="load" name="load" />
+                    <button id="clearAll">Clear All</button>
+                </div>
             </div>
-            <div class="control control-weight">
-                <label for="strokeWeight">Thickness</label>
-                <input type="number" name="strokeWeight" />
-            </div>
-            <div class="control control-snap">
-                <label for="snap">Snap to Grid</label>
-                <input type="checkbox" name="snap" />
+            <div class="controls-center">
+                <div class="control control-color">
+                    <label for="color">Color</label>
+                    <input type="color" name="color" />
+                </div>
+                <div class="control control-weight">
+                    <label for="strokeWeight">Thickness</label>
+                    <input type="number" name="strokeWeight" />
+                </div>
+                <div class="control control-snap">
+                    <label for="snap">Snap to Grid</label>
+                    <input type="checkbox" name="snap" />
+                </div>
             </div>
         </div>
         

@@ -54,8 +54,23 @@ function windowResized() {
 }
 
 function colorToHex(color) {
-    console.log(color);
     return '#' + hex(color.levels[0],2) + hex(color.levels[1],2) + hex(color.levels[2],2);
+}
+
+function download() {
+    let element = document.createElement('a')
+    element.setAttribute(
+        'href',
+        `data:text/plain;charset=utf-8, ${grid.save()}`
+    )
+    element.setAttribute(
+        'download',
+        `VGPDrawing_${new Date().valueOf()}.json`
+    );
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
 }
 
 // Controls
@@ -65,12 +80,46 @@ function setControlValues() {
     document.querySelector('.control-snap input').checked = grid.snap;
 }
 
+// Save
+document.querySelector('.control-cluster #saveAll').addEventListener('click', e => {
+    download();
+})
+
+// Load
+document.querySelector('.control-cluster #loadOverlay').addEventListener('click', e => {
+    document.querySelector('.control-cluster #load').click();
+});
+document.querySelector('.control-cluster #load').addEventListener('change', e => {
+    if (confirm('This will remove every drawn line on the grid and replace it with the loaded file. Make sure to save your progress first. Are you sure you want to continue?')) {
+        let fileReader = new FileReader();
+        fileReader.onload = function () {
+            grid.load(fileReader.result);
+        }
+        fileReader.readAsText(e.target.files[0]);
+        document.querySelector('.control-cluster #load').value = '';
+    } else {
+        document.querySelector('.control-cluster #load').value = '';
+    }
+})
+
+// Clear
+document.querySelector('.control-cluster #clearAll').addEventListener('click', e => {
+    if (confirm('This will remove every drawn line on the grid. Are you sure?')) {
+        grid.clear();
+    }
+})
+
+// Color
 document.querySelector('.control-color input').addEventListener('input', e => {
     grid.setColor(e.target.value);
 });
+
+// Weight
 document.querySelector('.control-weight input').addEventListener('input', e => {
     grid.setWeight(e.target.value);
 });
+
+// Snap
 document.querySelector('.control-snap input').addEventListener('click', e => {
     grid.setSnap(e.target.checked);
 });

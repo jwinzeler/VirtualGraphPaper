@@ -2,13 +2,17 @@ html, body {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
+    font-size: 14px;
 }
 
 .controls {
     position: absolute;
-    top: 50%;
+    top: 10px;
     left: 10px;
-    transform: translateY(-50%);
+    bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .control {
@@ -17,7 +21,7 @@ html, body {
     border: 1px solid #CCC;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     padding: 5px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 
     display: flex;
     flex-direction: column;
@@ -34,7 +38,7 @@ html, body {
     padding: 5px 0 5px 14px;
 
     font-family: 'Roboto', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
 
     border: 0;
     outline: 0;
@@ -55,4 +59,35 @@ html, body {
 
 .control label {
     line-height: 1.5;
+}
+
+.control button {
+    outline: 0;
+    border-radius: 5px;
+    border: 1px solid #BBB;
+    border-bottom-width: 2px;
+    background: #DDD;
+    margin-bottom: 5px;
+    padding: 5px;
+    width: 100%;
+
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
+
+.control button:last-of-type {
+    margin-bottom: 0px;
+}
+
+.control button:hover {
+    background: #EEE;
+}
+
+.control button:active {
+    border-bottom-width: 1px;
+    margin-top: 1px;
+}
+
+.control #load {
+    display: none;
 }
