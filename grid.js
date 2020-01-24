@@ -135,4 +135,25 @@ class Grid {
             )
         }
     }
+
+    setWeight(weight) {
+        weight = parseInt(weight);
+        this.weight = weight;
+    }
+
+    setSnap(snap) {
+        switch(snap) {
+            case false:
+                this.snap = false;
+                break;
+            case true:
+            default:
+                this.snap = true;
+                break;
+        }
+    }
+
+    setColor(c) {
+        this.color = color(c);
+    }
 }

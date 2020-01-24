@@ -3,11 +3,26 @@
         <link rel="stylesheet" href="style.css">
 
         <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="controls">
+            <div class="control control-color">
+                <label for="color">Color</label>
+                <input type="color" name="color" />
+            </div>
+            <div class="control control-weight">
+                <label for="strokeWeight">Thickness</label>
+                <input type="number" name="strokeWeight" />
+            </div>
+            <div class="control control-snap">
+                <label for="snap">Snap to Grid</label>
+                <input type="checkbox" name="snap" />
+            </div>
+        </div>
+        
         <script src="main.js"></script>
         <script src="grid.js"></script>
         <script src="line.js"></script>
-    </head>
-    <body>
-
     </body>
 </html>

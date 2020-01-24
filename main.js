@@ -1,12 +1,16 @@
 let grid;
+let cnv;
 let pMouseCenterDown = false;
 
 /* Remove default rightclick functionality to allow our own function */
-document.addEventListener('contextmenu', event => event.preventDefault());
+document.addEventListener('contextmenu', e => e.preventDefault());
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
+    cnv = createCanvas(windowWidth, windowHeight);
+    cnv.mousePressed(handleInput);
     grid = new Grid(16);
+
+    setControlValues();
 }
 
 function draw() {
@@ -14,7 +18,7 @@ function draw() {
     grid.draw();
 }
 
-function mousePressed() {
+function handleInput() {
     if (mouseButton === LEFT) {
         grid.addPoint();
     }
@@ -48,3 +52,25 @@ function mouseWheel(e) {
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
+
+function colorToHex(color) {
+    console.log(color);
+    return '#' + hex(color.levels[0],2) + hex(color.levels[1],2) + hex(color.levels[2],2);
+}
+
+// Controls
+function setControlValues() {
+    document.querySelector('.control-color input').value = colorToHex(grid.color);
+    document.querySelector('.control-weight input').value = grid.weight;
+    document.querySelector('.control-snap input').checked = grid.snap;
+}
+
+document.querySelector('.control-color input').addEventListener('input', e => {
+    grid.setColor(e.target.value);
+});
+document.querySelector('.control-weight input').addEventListener('input', e => {
+    grid.setWeight(e.target.value);
+});
+document.querySelector('.control-snap input').addEventListener('click', e => {
+    grid.setSnap(e.target.checked);
+});

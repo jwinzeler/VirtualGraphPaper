@@ -1,4 +1,58 @@
 html, body {
     margin: 0;
     padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.controls {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+}
+
+.control {
+    border-radius: 5px;
+    background: #FFF;
+    border: 1px solid #CCC;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    padding: 5px;
+    margin-bottom: 15px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.control:last-of-type {
+    margin-bottom: 0px;
+}
+
+.control input {
+    width: 90px;
+    padding: 5px 0 5px 14px;
+
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+
+    border: 0;
+    outline: 0;
+    border-bottom: 1px solid #CCC;
+    text-align: center;
+}
+
+.control input:hover {
+    border-bottom: 1px solid #AAA;
+}
+
+.control input[type="color"] {
+    height: auto;
+    cursor: pointer;
+    padding: 0;
+    height: 30px;
+}
+
+.control label {
+    line-height: 1.5;
 }
