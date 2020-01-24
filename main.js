@@ -18,6 +18,10 @@ function mousePressed() {
     if (mouseButton === LEFT) {
         grid.addPoint();
     }
+
+    if (mouseButton === RIGHT) {
+        grid.removePoint();
+    }
 }
 
 function pan() {

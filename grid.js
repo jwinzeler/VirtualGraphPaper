@@ -4,13 +4,12 @@ class Grid {
         this.zoom = 1;
         this.offset = createVector();
 
-        this.lines = [
-            new Line(5, 5, 10, 10, color(0, 255, 0), 5)
-        ];
+        this.lines = [];
 
         this.point = null;
         this.color = color(0);
         this.weight = 5;
+        this.snap = true;
 
         this.zoomFactor = 1.05;
     }
@@ -26,7 +25,7 @@ class Grid {
         const edgeOffsetY = this.offset.y % relativeCellSize;
 
         // Vertical Lines
-        for (let i = -1; i <= width / relativeCellSize; i++) {
+        for (let i = -1; i <= width / relativeCellSize + 1; i++) {
             line(
                 edgeOffsetX + (i * relativeCellSize),
                 -relativeCellSize,
@@ -36,11 +35,11 @@ class Grid {
         }
 
         // Horizontal Lines
-        for (let i = -1; i <= height / relativeCellSize; i++) {
+        for (let i = -1; i <= height / relativeCellSize + 1; i++) {
             line(
                 -relativeCellSize,
                 edgeOffsetY + (i * relativeCellSize),
-                relativeCellSize + height,
+                relativeCellSize + width,
                 edgeOffsetY + (i * relativeCellSize)
             );
         }
@@ -51,16 +50,23 @@ class Grid {
         });
 
         // Current Line
+        let tempPos = this.getGridLocation(mouseX, mouseY);
+        stroke(this.color);
+        strokeWeight(this.weight * this.zoom);
         if (this.point) {
-            stroke(this.color);
-            strokeWeight(this.weight * this.zoom);
             line(
-                this.point.x * this.cellSize + this.offset.x,
-                this.point.y * this.cellSize + this.offset.y,
-                mouseX,
-                mouseY
+                this.point.x * (this.cellSize * this.zoom) + this.offset.x,
+                this.point.y * (this.cellSize * this.zoom) + this.offset.y,
+                tempPos.x * (this.cellSize * this.zoom) + this.offset.x,
+                tempPos.y * (this.cellSize * this.zoom) + this.offset.y
             );
+        } else {
+            point(
+                tempPos.x * (this.cellSize * this.zoom) + this.offset.x,
+                tempPos.y * (this.cellSize * this.zoom) + this.offset.y
+            );                
         }
+        
     }
 
     pan() {
@@ -90,20 +96,43 @@ class Grid {
         }
     }
 
-    // TODO: BROKEN AF FIX BRAH
     addPoint() {
+        if (this.point) {
+            let p2 = this.getGridLocation(mouseX, mouseY);
+            this.lines.push(new Line(this.point.x, this.point.y, p2.x, p2.y, this.color, this.weight));
+            if (keyIsPressed) {
+                if (keyCode === 16) {
+                    this.point = p2;
+                } else {
+                    this.point = null;
+                }
+            } else {
+                this.point = null;
+            }
+        } else {
+            this.point = this.getGridLocation(mouseX, mouseY);
+        }
+    }
+
+    removePoint() {
         if (this.point) {
             this.point = null;
         } else {
-            this.point = this.getGridLocation(mouseX, mouseY);
-            console.log(this.point);
+            console.log(mouseX, mouseY, "Remove Line");
         }
     }
 
     getGridLocation(x, y) {
-        return createVector(
-            Math.round(x / this.cellSize),
-            Math.round(y / this.cellSize)
-        );
+        if (this.snap) {
+            return createVector(
+                Math.round((x - this.offset.x) / (this.cellSize * this.zoom)),
+                Math.round((y - this.offset.y) / (this.cellSize * this.zoom))
+            );
+        } else {
+            return createVector(
+                (x - this.offset.x) / (this.cellSize * this.zoom),
+                (y - this.offset.y) / (this.cellSize * this.zoom)
+            )
+        }
     }
 }
